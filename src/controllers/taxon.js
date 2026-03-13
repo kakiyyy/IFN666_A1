@@ -1,70 +1,87 @@
 const taxons = [];
 
 exports.getAll = async (req, res) => {
-    // Put your code here
-    if(taxons === null) return res.status(204).json({error: 'No Content'})
-
-    return res.status(200).json(taxons);
+  res.json(taxons);
 };
 
 exports.get = async (req, res) => {
-        // Put your code here
-    const { id } = req.params;
-    if (!id) return res.status(400).json({error: 'Bad Request'})
+  const { id } = req.params;
 
-    const taxon = taxons.find(t => t.taxonomy_id === id);
-    if (!taxon) return res.status(204).json({error: 'No Content'})
+  if (!id) {
+    return res.sendStatus(400);
+  }
 
-    return res.status(200).json(taxons);
+  const taxon = taxons.find((t) => t.taxonomy_id === id);
+
+  if (!taxon) {
+    return res.sendStatus(204);
+  }
+
+  res.json(taxon);
 };
 
 exports.create = async (req, res) => {
-    const { scientific_name, common_name, taxonomy_id } = req.body;
-    // Put your code here
-    if (!scientific_name || !common_name || !taxonomy_id ) return res.status(400).json({error: 'Bad Request'})
+  const { scientific_name, common_name, taxonomy_id } = req.body;
 
-    const existing = taxons.find(t => t.taxonomy_id === id);
-    if(existing) return res.status(409).json({error: 'Conflict'})
+  if (!scientific_name || !common_name || !taxonomy_id) {
+    return res.sendStatus(400);
+  }
 
-    const newTaxon = {
-        scientific_name,
-        common_name,
-        taxonomy_id
-    };
-    
-    taxons.push(newTaxon);
+  const existing = taxons.find((t) => t.taxonomy_id === taxonomy_id);
 
-    res.status(201).json(newTaxon);
+  if (existing) {
+    return res.sendStatus(409);
+  }
+
+  const newTaxon = {
+    scientific_name,
+    common_name,
+    taxonomy_id,
+  };
+
+  taxons.push(newTaxon);
+
+  res.status(201).json(newTaxon);
 };
 
 exports.update = async (req, res) => {
-    const { id } = req.params;
-    const { scientific_name, common_name } = req.body;
+  const { id } = req.params;
+  const { scientific_name, common_name } = req.body;
 
-    // Put your code here
-    if (!id) return res.status(400).json({error: 'Bad Request'})
-    
-    const taxon = taxons.find(t => t.taxonomy_id === id);
+  if (!id) {
+    return res.sendStatus(400);
+  }
 
-    taxon.scientific_name = scientific_name;
-    taxon.common_name = common_name;
+  if (!scientific_name || !common_name) {
+    return res.sendStatus(400);
+  }
 
-    res.status(200).json(taxon);
+  const taxon = taxons.find((t) => t.taxonomy_id === id);
 
+  if (!taxon) {
+    return res.sendStatus(204);
+  }
+
+  taxon.scientific_name = scientific_name;
+  taxon.common_name = common_name;
+
+  res.status(200).json(taxon);
 };
 
 exports.delete = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    // Put your code here
-    if (!id) return res.status(400).json({error: 'Bad Request'})
-    
-    const taxon = taxons.find(t => t.taxonomy_id === id);
-    if (index === -1) {
-        return res.status(204).json({error: 'No Content'})
-    }
+  if (!id) {
+    return res.sendStatus(400);
+  }
 
-    taxons.splice(index, 1);
+  const index = taxons.findIndex((t) => t.taxonomy_id === id);
 
-    res.status(200).json(taxon);
-};
+  if (index === -1) {
+    return res.sendStatus(204);
+  }
+
+  const deletedTaxon = taxons.splice(index, 1)[0];
+
+  res.status(200).json(deletedTaxon);
+}

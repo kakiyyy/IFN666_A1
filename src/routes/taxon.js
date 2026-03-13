@@ -4,7 +4,7 @@ const router = express.Router();
 const controller = require("../controllers/taxon");
 
 // get all (listing)
-router.get("/", controller.list);
+router.get("/", controller.getAll);
 
 // get from id (listing)
 router.get("/:id", controller.get);
