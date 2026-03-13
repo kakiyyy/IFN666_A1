@@ -3,19 +3,19 @@ const router = express.Router();
 
 const controller = require("../controllers/taxon");
 
-// list all taxons
+// get all (listing)
 router.get("/", controller.list);
 
-// get a single taxon
+// get from id (listing)
 router.get("/:id", controller.get);
 
-// create a new taxon
+// creating
 router.post("/", controller.create);
 
-// update an existing taxon
+// updating
 router.put("/:id", controller.update);
 
-// delete a taxon
+// deleting
 router.delete("/:id", controller.delete);
 
 module.exports = router;

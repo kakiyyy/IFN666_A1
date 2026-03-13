@@ -1,17 +1,13 @@
-const mongoose = require('mongoose');
+module.exports = (req, res, next) => {
 
-/**
- * Middleware to validate MongoDB ObjectID
- * @param {string} paramName - The request parameter to validate
- */
-const validateMongoId = (paramName) => {
-    return (req, res, next) => {
-        const id = req.params[paramName];
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ error: 'Invalid MongoDB ObjectID' });
+    if (req.method === "POST" || req.method === "PUT" || req.method === "PATCH") {
+
+        const contentType = req.headers["content-type"];
+
+        if (!contentType || !contentType.includes("application/json")) {
+            return res.status(415).json({error: 'Unsupported Media Type'});
         }
-        next();
-    };
-};
+    }
 
-module.exports = validateMongoId;
+    next();
+};
